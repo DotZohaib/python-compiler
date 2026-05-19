@@ -7,43 +7,45 @@ interface IDEHeaderProps {
 
 export default function IDEHeader({ isRunning, onRun }: IDEHeaderProps) {
   return (
-    <header className="flex items-center justify-between px-6 h-14 glass-header z-10 select-none">
+    <header className="flex items-center justify-between px-6 h-[60px] bg-[#09090b]/80 backdrop-blur-2xl border-b border-white/[0.04] z-10 select-none sticky top-0">
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3 text-zinc-100">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+        <div className="flex items-center gap-3.5 group cursor-pointer">
+          <div className="w-[34px] h-[34px] rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.25)] group-hover:shadow-[0_0_25px_rgba(79,70,229,0.4)] transition-all duration-300">
             <PythonLogo />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-[15px] tracking-tight leading-tight">PyCompile</span>
-            <span className="text-[11px] text-zinc-500 font-medium leading-tight">Next-Gen Environment</span>
+            <span className="font-semibold text-[15px] tracking-tight text-white/95 leading-tight">PyCompile</span>
+            <span className="text-[11.5px] text-white/40 font-medium leading-tight">World-Class Environment</span>
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.04] active:scale-[0.98] transition-all duration-200">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           Share
         </button>
+        
+        <div className="h-4 w-px bg-white/[0.08]" />
         
         <button
           onClick={onRun}
           disabled={isRunning}
-          className={`flex items-center gap-2 px-5 py-2 rounded-lg font-semibold text-[13px] transition-all duration-300 ${
+          className={`flex items-center gap-2.5 px-6 py-2 rounded-xl font-semibold text-[13px] transition-all duration-300 active:scale-[0.97] ${
             isRunning
-              ? "bg-zinc-800 text-zinc-400 cursor-not-allowed border border-white/5"
-              : "bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] border border-blue-400/30"
+              ? "bg-white/[0.03] text-white/40 cursor-not-allowed border border-white/[0.05]"
+              : "bg-white text-black hover:bg-white/90 shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:shadow-[0_0_40px_rgba(255,255,255,0.25)] border border-white/20"
           }`}
         >
           {isRunning ? (
             <>
               <SpinnerIcon />
-              Executing...
+              <span className="tracking-wide">Executing...</span>
             </>
           ) : (
             <>
               <PlayIcon />
-              Run Code
+              <span className="tracking-wide">Run Code</span>
             </>
           )}
         </button>
