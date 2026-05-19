@@ -16,10 +16,10 @@ export default function IDEHeader({ isRunning, onRun }: IDEHeaderProps) {
         </div>
         <div className="flex flex-col">
           <span className="font-semibold text-sm tracking-wide text-[#EDEDED] leading-tight">
-            PyCompile
+            DotPython
           </span>
           <span className="text-[11px] text-[#A1A1AA] font-medium mt-0.5">
-            Python 3.10
+            DotZohaib
           </span>
         </div>
       </div>
