@@ -24,12 +24,6 @@ export default function Terminal({ lines, isRunning, onClear }: TerminalProps) {
           <div className="flex items-center gap-2 border-b border-white h-full pt-px">
             <span className="text-xs font-medium text-[#EDEDED] tracking-wide uppercase">Terminal</span>
           </div>
-          <div className="flex items-center gap-2 h-full pt-px border-b border-transparent cursor-not-allowed group">
-            <span className="text-xs font-medium text-[#71717A] tracking-wide uppercase group-hover:text-[#A1A1AA] transition-colors">Output</span>
-          </div>
-          <div className="flex items-center gap-2 h-full pt-px border-b border-transparent cursor-not-allowed group">
-            <span className="text-xs font-medium text-[#71717A] tracking-wide uppercase group-hover:text-[#A1A1AA] transition-colors">Problems</span>
-          </div>
         </div>
 
         <div className="flex items-center gap-3">
