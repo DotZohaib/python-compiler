@@ -15,26 +15,18 @@ export default function IDEHeader({ isRunning, onRun }: IDEHeaderProps) {
           </div>
           <div className="flex flex-col">
             <span className="font-medium text-sm text-[#EDEDED] leading-tight">PyCompile</span>
-            <span className="text-xs text-[#71717A] leading-tight">Workspace</span>
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-[#A1A1AA] hover:text-[#EDEDED] hover:bg-white/[0.08] active:scale-[0.98] transition-all duration-200">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          Share
-        </button>
-        
-        <div className="h-4 w-px bg-white/[0.08]" />
-        
         <button
           onClick={onRun}
           disabled={isRunning}
           className={`flex items-center gap-2 px-4 py-1.5 rounded-md font-medium text-sm transition-all duration-200 active:scale-[0.98] ${
             isRunning
               ? "bg-[#1A1A1A] text-[#71717A] cursor-not-allowed border border-white/[0.08]"
-              : "bg-[#EDEDED] text-black hover:bg-white border border-transparent shadow-sm"
+              : "bg-blue-600 text-white hover:bg-blue-700 border border-transparent shadow-sm"
           }`}
         >
           {isRunning ? (
