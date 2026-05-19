@@ -54,7 +54,7 @@ for i, num in enumerate(fib):
     print(f"  fib({i}) = {num}")
 `;
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "https://python-compiler-backend.vercel.app";
 
 // ── Helper: make a unique OutputLine ─────────────────────────────────────────
 function makeLine(
