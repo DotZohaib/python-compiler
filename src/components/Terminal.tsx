@@ -12,122 +12,60 @@ interface TerminalProps {
 export default function Terminal({ lines, isRunning, onClear }: TerminalProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when new output arrives or running state changes
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [lines, isRunning]);
 
   return (
-    <div
-      className="flex flex-col h-full"
-      style={{ fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace" }}
-    >
-      {/* ── Terminal Titlebar ─────────────────────────────────────────── */}
-      <div
-        className="flex items-center justify-between px-4 select-none"
-        style={{
-          height: "36px",
-          backgroundColor: "var(--bg-panel)",
-          borderBottom: "1px solid var(--border-primary)",
-          flexShrink: 0,
-        }}
-      >
-        {/* Left: title + status */}
-        <div className="flex items-center gap-2">
-          <TerminalIcon />
-          <span
-            style={{ fontSize: "12px", color: "var(--text-secondary)", fontFamily: "inherit" }}
-          >
-            OUTPUT
-          </span>
+    <div className="flex flex-col h-full font-mono relative">
+      {/* Glossy overlay effect for the top edge */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" />
 
-          {/* Running indicator */}
-          {isRunning && (
-            <div className="flex items-center gap-1.5 ml-2">
-              <div
-                className="w-1.5 h-1.5 rounded-full animate-pulse-dot"
-                style={{ backgroundColor: "var(--terminal-prompt)" }}
-              />
-              <span style={{ fontSize: "11px", color: "var(--terminal-prompt)" }}>
-                executing
-              </span>
-            </div>
-          )}
+      {/* Terminal Header */}
+      <div className="flex items-center justify-between px-4 h-10 bg-[#121214] border-b border-white/[0.05] flex-shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 border-b-2 border-blue-500 h-full px-1">
+            <span className="text-[12px] font-medium text-zinc-100 tracking-wider">TERMINAL</span>
+          </div>
+          <div className="flex items-center gap-2 h-full px-1 cursor-not-allowed opacity-50">
+            <span className="text-[12px] font-medium text-zinc-500 tracking-wider">PROBLEMS</span>
+          </div>
         </div>
 
-        {/* Right: line count + clear */}
         <div className="flex items-center gap-3">
-          {lines.length > 0 && (
-            <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
-              {lines.length} line{lines.length !== 1 ? "s" : ""}
-            </span>
+          {isRunning && (
+            <div className="flex items-center gap-2 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse-dot" />
+              <span className="text-[11px] font-medium text-blue-400 tracking-wide uppercase">Executing</span>
+            </div>
           )}
           <button
-            id="btn-terminal-clear"
             onClick={onClear}
-            title="Clear output"
-            style={{
-              fontSize: "11px",
-              color: "var(--text-muted)",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: "2px 6px",
-              borderRadius: "3px",
-            }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLButtonElement).style.color =
-                "var(--text-secondary)")
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLButtonElement).style.color =
-                "var(--text-muted)")
-            }
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/10 transition-all border border-transparent hover:border-white/10"
           >
-            clear
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Clear
           </button>
         </div>
       </div>
 
-      {/* ── Output Scroll Area ────────────────────────────────────────── */}
-      <div
-        className="flex-1 overflow-y-auto overflow-x-auto p-4"
-        style={{ backgroundColor: "var(--bg-terminal)" }}
-      >
+      {/* Terminal Content Area */}
+      <div className="flex-1 overflow-y-auto p-5 bg-[#09090b] selection:bg-blue-500/30 text-[13.5px] leading-relaxed">
         {lines.length === 0 && !isRunning ? (
           <EmptyState />
         ) : (
-          <div className="space-y-0.5">
+          <div className="space-y-1 pb-4">
             {lines.map((line) => (
               <OutputRow key={line.id} line={line} />
             ))}
 
-            {/* Running spinner row */}
             {isRunning && (
-              <div className="flex items-center gap-2 mt-1" style={{ opacity: 0.7 }}>
-                <span
-                  style={{
-                    fontSize: "13px",
-                    color: "var(--terminal-prompt)",
-                    fontFamily: "inherit",
-                  }}
-                >
-                  $
-                </span>
-                <span
-                  className="cursor-blink"
-                  style={{
-                    fontSize: "13px",
-                    color: "var(--text-secondary)",
-                    fontFamily: "inherit",
-                  }}
-                >
-                  python main.py
-                </span>
+              <div className="flex items-start gap-3 mt-2 opacity-80">
+                <span className="text-blue-500 font-bold mt-0.5">❯</span>
+                <span className="text-zinc-400 cursor-blink">python main.py</span>
               </div>
             )}
-
-            <div ref={bottomRef} />
+            <div ref={bottomRef} className="h-4" />
           </div>
         )}
       </div>
@@ -135,180 +73,48 @@ export default function Terminal({ lines, isRunning, onClear }: TerminalProps) {
   );
 }
 
-/* ── Single output line ──────────────────────────────────────────── */
 function OutputRow({ line }: { line: OutputLine }) {
   const styles = getLineStyle(line.type);
 
   return (
-    <div
-      className="flex items-start gap-2 px-1 animate-fade-in"
-      style={{
-        padding: "2px 4px",
-        borderRadius: "3px",
-        backgroundColor: styles.rowBg,
-      }}
-    >
-      {/* Prefix glyph */}
-      <span
-        style={{
-          fontSize: "12px",
-          color: styles.prefix,
-          flexShrink: 0,
-          lineHeight: "20px",
-          userSelect: "none",
-          minWidth: "14px",
-        }}
-      >
-        {styles.glyph}
-      </span>
-
-      {/* Content */}
-      <pre
-        style={{
-          fontSize: "13px",
-          lineHeight: "20px",
-          color: styles.text,
-          fontFamily: "inherit",
-          whiteSpace: "pre-wrap",
-          wordBreak: "break-all",
-          margin: 0,
-          flex: 1,
-        }}
-      >
+    <div className={`flex items-start gap-3 px-2 py-1.5 rounded-md animate-fade-in hover:bg-white/[0.02] transition-colors ${styles.rowBg}`}>
+      <span className={`mt-0.5 flex-shrink-0 text-[14px] font-bold ${styles.prefix}`}>{styles.glyph}</span>
+      <pre className={`flex-1 whitespace-pre-wrap break-all font-mono m-0 ${styles.text}`}>
         {line.content}
       </pre>
-
-      {/* Timestamp */}
-      <span
-        style={{
-          fontSize: "10px",
-          color: "var(--text-muted)",
-          flexShrink: 0,
-          lineHeight: "20px",
-          paddingLeft: "8px",
-          userSelect: "none",
-        }}
-      >
+      <span className="text-[10px] text-zinc-600 mt-1 flex-shrink-0 font-sans tracking-wide">
         {line.timestamp}
       </span>
     </div>
   );
 }
 
-/* ── Style map per output type ───────────────────────────────────── */
 function getLineStyle(type: OutputLine["type"]) {
   switch (type) {
     case "stdout":
-      return {
-        glyph: "›",
-        prefix: "var(--text-muted)",
-        text: "var(--terminal-stdout)",
-        rowBg: "transparent",
-      };
+      return { glyph: "›", prefix: "text-zinc-600", text: "text-zinc-300", rowBg: "" };
     case "stderr":
-      return {
-        glyph: "✕",
-        prefix: "var(--terminal-stderr)",
-        text: "var(--terminal-stderr)",
-        rowBg: "rgba(248, 81, 73, 0.06)",
-      };
+      return { glyph: "✕", prefix: "text-red-400", text: "text-red-400", rowBg: "bg-red-500/5 border border-red-500/10" };
     case "error":
-      return {
-        glyph: "●",
-        prefix: "#f85149",
-        text: "#f85149",
-        rowBg: "rgba(248, 81, 73, 0.08)",
-      };
+      return { glyph: "●", prefix: "text-red-500", text: "text-red-500", rowBg: "bg-red-500/10 border border-red-500/20" };
     case "success":
-      return {
-        glyph: "✓",
-        prefix: "var(--text-success)",
-        text: "var(--text-success)",
-        rowBg: "rgba(63, 185, 80, 0.06)",
-      };
+      return { glyph: "✓", prefix: "text-emerald-400", text: "text-emerald-400", rowBg: "bg-emerald-500/5 border border-emerald-500/10" };
     case "info":
     default:
-      return {
-        glyph: "·",
-        prefix: "var(--text-accent)",
-        text: "var(--text-secondary)",
-        rowBg: "transparent",
-      };
+      return { glyph: "ℹ", prefix: "text-blue-400", text: "text-blue-200", rowBg: "" };
   }
 }
 
-/* ── Empty state (no output yet) ─────────────────────────────────── */
 function EmptyState() {
   return (
-    <div
-      className="flex flex-col items-center justify-center h-full gap-3"
-      style={{ minHeight: "80px", opacity: 0.5 }}
-    >
-      <div
-        style={{
-          fontSize: "28px",
-          lineHeight: 1,
-          filter: "grayscale(0.3)",
-        }}
-      >
-        🐍
-      </div>
-      <div
-        style={{
-          fontSize: "13px",
-          color: "var(--text-muted)",
-          fontFamily: "'Inter', sans-serif",
-          textAlign: "center",
-        }}
-      >
-        Run your code to see output here
-        <br />
-        <span style={{ fontSize: "11px" }}>
-          Press <kbd
-            style={{
-              padding: "1px 5px",
-              borderRadius: "3px",
-              backgroundColor: "var(--bg-panel)",
-              border: "1px solid var(--border-primary)",
-              fontSize: "10px",
-            }}
-          >
-            Ctrl
-          </kbd>{" "}
-          +{" "}
-          <kbd
-            style={{
-              padding: "1px 5px",
-              borderRadius: "3px",
-              backgroundColor: "var(--bg-panel)",
-              border: "1px solid var(--border-primary)",
-              fontSize: "10px",
-            }}
-          >
-            Enter
-          </kbd>{" "}
-          to run
-        </span>
+    <div className="flex flex-col items-center justify-center h-full gap-4 opacity-40 select-none">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+      <div className="text-center font-sans">
+        <p className="text-[14px] text-zinc-400 font-medium mb-1">Terminal is ready</p>
+        <p className="text-[12px] text-zinc-500">
+          Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-[10px] mx-1">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-[10px] mx-1">Enter</kbd> to run your code
+        </p>
       </div>
     </div>
-  );
-}
-
-/* ── Terminal icon ───────────────────────────────────────────────── */
-function TerminalIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="var(--text-muted)"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="4 17 10 11 4 5" />
-      <line x1="12" y1="19" x2="20" y2="19" />
-    </svg>
   );
 }
