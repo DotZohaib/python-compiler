@@ -23,7 +23,7 @@ export default function IDEHeader({ isRunning, onRun }: IDEHeaderProps) {
         <button
           onClick={onRun}
           disabled={isRunning}
-          className={`flex items-center gap-2 px-4 py-1.5 rounded-md font-medium text-sm transition-all duration-200 active:scale-[0.98] ${
+          className={`flex items-center left-20px gap-2 px-6 py-3 rounded-md font-medium text-sm transition-all duration-200 active:scale-[0.98] ${
             isRunning
               ? "bg-[#1A1A1A] text-[#71717A] cursor-not-allowed border border-white/[0.08]"
               : "bg-blue-600 text-white hover:bg-blue-700 border border-transparent shadow-sm"
