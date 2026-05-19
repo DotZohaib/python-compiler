@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import dynamic from "next/dynamic";
 import type { editor } from "monaco-editor";
 
-// Dynamically import Monaco to avoid SSR issues
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
   loading: () => <EditorSkeleton />,
@@ -25,84 +24,165 @@ export default function CodeEditor({ code, onChange, onRun }: CodeEditorProps) {
   ) => {
     editorRef.current = editorInstance;
 
-    // ── Custom PyCompile dark theme ──────────────────────────────────
-    monacoInstance.editor.defineTheme("pycompile-dark", {
+    monacoInstance.editor.defineTheme("modern-dark", {
       base: "vs-dark",
       inherit: true,
       rules: [
-        // Keywords
-        { token: "keyword",              foreground: "ff79c6", fontStyle: "bold" },
-        { token: "keyword.control",      foreground: "ff79c6", fontStyle: "bold" },
-        // Strings
-        { token: "string",               foreground: "f1fa8c" },
-        { token: "string.escape",        foreground: "ffb86c" },
-        // Numbers
-        { token: "number",               foreground: "bd93f9" },
-        { token: "number.float",         foreground: "bd93f9" },
-        // Comments
-        { token: "comment",              foreground: "6272a4", fontStyle: "italic" },
-        // Built-ins & identifiers
-        { token: "identifier",           foreground: "f8f8f2" },
-        { token: "type.identifier",      foreground: "8be9fd" },
-        // Decorators
-        { token: "tag",                  foreground: "50fa7b" },
-        // Operators
-        { token: "operator",             foreground: "ff79c6" },
-        // Functions / methods
-        { token: "function",             foreground: "50fa7b" },
-        // Class names
-        { token: "class-name",           foreground: "8be9fd", fontStyle: "bold" },
-        // Constants (True, False, None)
-        { token: "constant.language",    foreground: "bd93f9" },
+        { token: "keyword", foreground: "c678dd", fontStyle: "bold" },
+        { token: "string", foreground: "98c379" },
+        { token: "number", foreground: "d19a66" },
+        { token: "comment", foreground: "5c6370", fontStyle: "italic" },
+        { token: "identifier", foreground: "e06c75" },
+        { token: "type.identifier", foreground: "e5c07b" },
+        { token: "operator", foreground: "56b6c2" },
+        { token: "function", foreground: "61afef" },
+        { token: "class-name", foreground: "e5c07b", fontStyle: "bold" },
+        { token: "constant.language", foreground: "d19a66" },
       ],
       colors: {
-        // Editor background
-        "editor.background":             "#0d1117",
-        "editor.foreground":             "#f8f8f2",
-        // Line numbers
-        "editorLineNumber.foreground":   "#484f58",
-        "editorLineNumber.activeForeground": "#8b949e",
-        // Cursor
-        "editorCursor.foreground":       "#f8f8f2",
-        // Selection
-        "editor.selectionBackground":    "#264f78",
-        "editor.inactiveSelectionBackground": "#1e3a5f",
-        // Current line
-        "editor.lineHighlightBackground": "#161b22",
-        "editor.lineHighlightBorderColor": "#30363d",
-        // Gutter
-        "editorGutter.background":       "#0d1117",
-        // Scrollbar
-        "scrollbar.shadow":              "#00000080",
-        "scrollbarSlider.background":    "#30363d80",
-        "scrollbarSlider.hoverBackground": "#484f5880",
-        "scrollbarSlider.activeBackground": "#6e768180",
-        // Minimap
-        "minimap.background":            "#0d1117",
-        "minimapSlider.background":      "#30363d60",
-        // Indent guides
-        "editorIndentGuide.background1": "#21262d",
-        "editorIndentGuide.activeBackground1": "#30363d",
-        // Match brackets
-        "editorBracketMatch.background": "#264f7840",
-        "editorBracketMatch.border":     "#1f6feb",
-        // Widget (autocomplete)
-        "editorWidget.background":       "#161b22",
-        "editorWidget.border":           "#30363d",
-        "editorSuggestWidget.background": "#161b22",
-        "editorSuggestWidget.border":    "#30363d",
-        "editorSuggestWidget.selectedBackground": "#1f6feb40",
-        // Error / warning squiggles
-        "editorError.foreground":        "#f85149",
-        "editorWarning.foreground":      "#d29922",
-        // Ruler
-        "editorRuler.foreground":        "#21262d",
+        "editor.background": "#00000000",
+        "editor.foreground": "#abb2bf",
+        "editorLineNumber.foreground": "#4b5263",
+        "editorLineNumber.activeForeground": "#abb2bf",
+        "editorCursor.foreground": "#528bff",
+        "editor.selectionBackground": "#3e4451",
+        "editor.inactiveSelectionBackground": "#2c313a",
+        "editor.lineHighlightBackground": "#2c313a80",
+        "editorGutter.background": "#00000000",
+        "scrollbarSlider.background": "#4b526380",
+        "scrollbarSlider.hoverBackground": "#5c6370",
+        "scrollbarSlider.activeBackground": "#abb2bf",
+        "editorWidget.background": "#21252b",
+        "editorWidget.border": "#181a1f",
+        "editorSuggestWidget.background": "#21252b",
+        "editorSuggestWidget.border": "#181a1f",
+        "editorSuggestWidget.selectedBackground": "#2c313a",
+        "editorError.foreground": "#e06c75",
+        "editorWarning.foreground": "#e5c07b",
       },
     });
 
-    monacoInstance.editor.setTheme("pycompile-dark");
+    monacoInstance.editor.setTheme("modern-dark");
 
-    // ── Keyboard shortcut: Ctrl+Enter = Run ─────────────────────────
+    monacoInstance.languages.registerCompletionItemProvider("python", {
+      provideCompletionItems: (model, position) => {
+        const word = model.getWordUntilPosition(position);
+        const range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn,
+        };
+
+        const suggestions = [
+          {
+            label: "print",
+            kind: monacoInstance.languages.CompletionItemKind.Function,
+            insertText: "print(${1:value})",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: "Prints the values to a stream, or to sys.stdout by default.",
+            range,
+          },
+          {
+            label: "def",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "def ${1:function_name}(${2:args}):\n\t${3:pass}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: "Function definition snippet",
+            range,
+          },
+          {
+            label: "class",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "class ${1:ClassName}:\n\tdef __init__(self):\n\t\t${2:pass}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: "Class definition snippet",
+            range,
+          },
+          {
+            label: "if",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "if ${1:condition}:\n\t${2:pass}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+          {
+            label: "for",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "for ${1:item} in ${2:iterable}:\n\t${3:pass}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+          {
+            label: "while",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "while ${1:condition}:\n\t${2:pass}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+          {
+            label: "try",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "try:\n\t${1:pass}\nexcept ${2:Exception} as ${3:e}:\n\t${4:raise}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+          {
+            label: "import",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "import ${1:module}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+          {
+            label: "from",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "from ${1:module} import ${2:name}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+          {
+            label: "main",
+            kind: monacoInstance.languages.CompletionItemKind.Snippet,
+            insertText: "if __name__ == '__main__':\n\t${1:main()}",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: "if __name__ == '__main__':",
+            range,
+          },
+          {
+            label: "len",
+            kind: monacoInstance.languages.CompletionItemKind.Function,
+            insertText: "len(${1:obj})",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: "Return the number of items in a container.",
+            range,
+          },
+          {
+            label: "range",
+            kind: monacoInstance.languages.CompletionItemKind.Function,
+            insertText: "range(${1:stop})",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+          {
+            label: "enumerate",
+            kind: monacoInstance.languages.CompletionItemKind.Function,
+            insertText: "enumerate(${1:iterable})",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+          {
+            label: "zip",
+            kind: monacoInstance.languages.CompletionItemKind.Function,
+            insertText: "zip(${1:iter1}, ${2:iter2})",
+            insertTextRules: monacoInstance.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range,
+          },
+        ];
+        return { suggestions };
+      },
+    });
+
     editorInstance.addCommand(
       monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.Enter,
       () => {
@@ -110,125 +190,72 @@ export default function CodeEditor({ code, onChange, onRun }: CodeEditorProps) {
       }
     );
 
-    // Focus the editor on mount
     editorInstance.focus();
   };
 
   return (
-    <div className="w-full h-full overflow-hidden" style={{ backgroundColor: "#0d1117" }}>
+    <div className="w-full h-full relative group bg-transparent">
       <MonacoEditor
         height="100%"
-        defaultLanguage="python"
         language="python"
         value={code}
         onChange={onChange}
         onMount={handleEditorDidMount}
         options={{
-          // Font
           fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace",
-          fontSize: 14,
+          fontSize: 15,
           fontLigatures: true,
-          lineHeight: 22,
-          letterSpacing: 0.3,
-
-          // Behaviour
+          lineHeight: 24,
+          letterSpacing: 0.5,
           wordWrap: "on",
           tabSize: 4,
           insertSpaces: true,
           autoIndent: "full",
           formatOnPaste: true,
           formatOnType: true,
-
-          // UI
           lineNumbers: "on",
+          lineNumbersMinChars: 4,
           glyphMargin: false,
           folding: true,
           foldingHighlight: true,
           showFoldingControls: "mouseover",
-          rulers: [80],
           renderLineHighlight: "all",
           cursorStyle: "line",
           cursorBlinking: "smooth",
           cursorSmoothCaretAnimation: "on",
           smoothScrolling: true,
           mouseWheelZoom: true,
-
-          // Minimap
-          minimap: {
-            enabled: true,
-            maxColumn: 60,
-            renderCharacters: false,
-            scale: 1,
-          },
-
-          // Scrollbar
+          minimap: { enabled: false },
           scrollbar: {
-            verticalScrollbarSize: 6,
-            horizontalScrollbarSize: 6,
-            useShadows: true,
+            verticalScrollbarSize: 8,
+            horizontalScrollbarSize: 8,
+            useShadows: false,
           },
-
-          // IntelliSense / suggestions
-          quickSuggestions: { other: true, comments: false, strings: false },
+          quickSuggestions: { other: true, comments: true, strings: true },
           suggestOnTriggerCharacters: true,
           acceptSuggestionOnEnter: "on",
           tabCompletion: "on",
+          wordBasedSuggestions: "currentDocument",
           parameterHints: { enabled: true },
-
-          // Misc
           bracketPairColorization: { enabled: true },
-          guides: {
-            bracketPairs: true,
-            indentation: true,
-          },
-          padding: { top: 16, bottom: 16 },
+          guides: { bracketPairs: true, indentation: true },
+          padding: { top: 24, bottom: 24 },
           scrollBeyondLastLine: false,
-          fixedOverflowWidgets: true,
-          accessibilitySupport: "auto",
         }}
       />
     </div>
   );
 }
 
-/* ── Loading skeleton shown while Monaco JS bundle loads ── */
 function EditorSkeleton() {
   return (
-    <div
-      className="w-full h-full flex flex-col"
-      style={{ backgroundColor: "#0d1117", padding: "16px 0" }}
-    >
-      {/* Line number + code skeleton rows */}
-      {Array.from({ length: 18 }).map((_, i) => (
-        <div
-          key={i}
-          className="flex items-center gap-4 px-4"
-          style={{ height: "22px", marginBottom: "0px" }}
-        >
-          {/* Line number */}
-          <div
-            style={{
-              width: "28px",
-              height: "12px",
-              borderRadius: "2px",
-              backgroundColor: "#21262d",
-              flexShrink: 0,
-              opacity: 0.6,
-            }}
-          />
-          {/* Code line */}
-          <div
-            style={{
-              height: "12px",
-              borderRadius: "2px",
-              backgroundColor: "#21262d",
-              width: `${Math.random() * 40 + 20}%`,
-              opacity: 0.4,
-              backgroundImage:
-                "linear-gradient(90deg, #21262d 25%, #30363d 50%, #21262d 75%)",
-              backgroundSize: "200% 100%",
-              animation: "shimmer 1.5s infinite",
-            }}
+    <div className="w-full h-full flex flex-col p-6 space-y-3">
+      {Array.from({ length: 10 }).map((_, i) => (
+        <div key={i} className="flex items-center gap-4">
+          <div className="w-6 h-4 bg-white/5 rounded" />
+          <div 
+            className="h-4 bg-white/5 rounded animate-pulse" 
+            style={{ width: `${Math.max(20, Math.random() * 80)}%`, animationDelay: `${i * 100}ms` }} 
           />
         </div>
       ))}
