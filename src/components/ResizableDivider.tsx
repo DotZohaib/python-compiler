@@ -58,31 +58,18 @@ export default function ResizableDivider({
       role="separator"
       aria-label="Drag to resize terminal panel"
       onMouseDown={handleMouseDown}
-      className={`group flex items-center justify-center cursor-row-resize select-none h-1.5 transition-all duration-300 flex-shrink-0 z-30 relative ${
-        isDragging ? "bg-blue-500/20" : "bg-[#09090b] hover:bg-white/[0.04]"
+      className={`group flex items-center justify-center cursor-row-resize select-none h-1.5 transition-colors duration-200 flex-shrink-0 z-30 relative ${
+        isDragging ? "bg-white/[0.05]" : "bg-transparent hover:bg-white/[0.02]"
       }`}
       style={{
-        borderTop: "1px solid rgba(255, 255, 255, 0.03)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.01)",
+        borderTop: "1px solid rgba(255, 255, 255, 0.08)",
       }}
     >
-      {/* Glow line when dragging */}
-      <div className={`absolute inset-0 bg-blue-500/10 blur-[4px] transition-opacity duration-300 ${isDragging ? "opacity-100" : "opacity-0"}`} />
-
       <div
-        className={`flex gap-[3px] transition-all duration-300 relative z-10 ${
-          isDragging ? "opacity-100 scale-y-125" : "opacity-20 group-hover:opacity-80"
+        className={`w-8 h-1 rounded-full transition-colors duration-200 ${
+          isDragging ? "bg-white/[0.3]" : "bg-white/[0.1] group-hover:bg-white/[0.2]"
         }`}
-      >
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className={`w-6 h-[2px] rounded-full transition-colors duration-300 ${
-              isDragging ? "bg-blue-400" : "bg-zinc-400 group-hover:bg-zinc-300"
-            }`}
-          />
-        ))}
-      </div>
+      />
     </div>
   );
 }
