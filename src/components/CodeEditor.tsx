@@ -31,7 +31,7 @@ export default function CodeEditor({ code, onChange, onRun }: CodeEditorProps) {
         { token: "keyword", foreground: "c678dd", fontStyle: "bold" },
         { token: "string", foreground: "a5d6ff" }, /* softer blue for strings */
         { token: "number", foreground: "d19a66" },
-        { token: "comment", foreground: "6b7280", fontStyle: "italic" }, /* deeper zinc */
+        { token: "comment", foreground: "71717a", fontStyle: "italic" }, /* zinc-500 */
         { token: "identifier", foreground: "e06c75" },
         { token: "type.identifier", foreground: "e5c07b" },
         { token: "operator", foreground: "56b6c2" },
@@ -40,25 +40,25 @@ export default function CodeEditor({ code, onChange, onRun }: CodeEditorProps) {
         { token: "constant.language", foreground: "d19a66" },
       ],
       colors: {
-        "editor.background": "#0c0c0e", /* Matches the page.tsx workspace container exactly */
-        "editor.foreground": "#e4e4e7",
-        "editorLineNumber.foreground": "#52525b",
-        "editorLineNumber.activeForeground": "#a1a1aa",
-        "editorCursor.foreground": "#60a5fa",
-        "editor.selectionBackground": "#2563eb40",
-        "editor.inactiveSelectionBackground": "#2563eb20",
-        "editor.lineHighlightBackground": "#ffffff05",
-        "editorGutter.background": "#0c0c0e",
-        "scrollbarSlider.background": "#ffffff10",
-        "scrollbarSlider.hoverBackground": "#ffffff20",
-        "scrollbarSlider.activeBackground": "#ffffff30",
-        "editorWidget.background": "#18181b",
-        "editorWidget.border": "#27272a",
-        "editorSuggestWidget.background": "#18181b",
-        "editorSuggestWidget.border": "#27272a",
-        "editorSuggestWidget.selectedBackground": "#27272a",
-        "editorError.foreground": "#ef4444",
-        "editorWarning.foreground": "#f59e0b",
+        "editor.background": "#0A0A0A", /* Matches the page.tsx workspace container exactly */
+        "editor.foreground": "#EDEDED",
+        "editorLineNumber.foreground": "#3F3F46", /* zinc-700 */
+        "editorLineNumber.activeForeground": "#A1A1AA", /* zinc-400 */
+        "editorCursor.foreground": "#EDEDED", /* White cursor */
+        "editor.selectionBackground": "#FFFFFF1A", /* 10% white */
+        "editor.inactiveSelectionBackground": "#FFFFFF0D", /* 5% white */
+        "editor.lineHighlightBackground": "#FFFFFF05", /* extremely subtle highlight */
+        "editorGutter.background": "#0A0A0A",
+        "scrollbarSlider.background": "#FFFFFF10",
+        "scrollbarSlider.hoverBackground": "#FFFFFF20",
+        "scrollbarSlider.activeBackground": "#FFFFFF30",
+        "editorWidget.background": "#121212", /* surface level 1 */
+        "editorWidget.border": "#FFFFFF14", /* 8% white */
+        "editorSuggestWidget.background": "#121212",
+        "editorSuggestWidget.border": "#FFFFFF14",
+        "editorSuggestWidget.selectedBackground": "#FFFFFF0D",
+        "editorError.foreground": "#EF4444",
+        "editorWarning.foreground": "#F59E0B",
       },
     });
 
@@ -203,7 +203,7 @@ export default function CodeEditor({ code, onChange, onRun }: CodeEditorProps) {
         onMount={handleEditorDidMount}
         options={{
           fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace",
-          fontSize: 15,
+          fontSize: 14,
           fontLigatures: true,
           lineHeight: 24,
           letterSpacing: 0.5,
@@ -249,12 +249,12 @@ export default function CodeEditor({ code, onChange, onRun }: CodeEditorProps) {
 
 function EditorSkeleton() {
   return (
-    <div className="w-full h-full flex flex-col p-6 space-y-3">
+    <div className="w-full h-full flex flex-col p-6 space-y-4">
       {Array.from({ length: 10 }).map((_, i) => (
         <div key={i} className="flex items-center gap-4">
-          <div className="w-6 h-4 bg-white/5 rounded" />
+          <div className="w-6 h-4 bg-white/[0.03] rounded" />
           <div 
-            className="h-4 bg-white/5 rounded animate-pulse" 
+            className="h-4 bg-white/[0.03] rounded animate-pulse" 
             style={{ width: `${Math.max(20, Math.random() * 80)}%`, animationDelay: `${i * 100}ms` }} 
           />
         </div>
