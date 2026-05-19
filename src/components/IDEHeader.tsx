@@ -7,32 +7,38 @@ interface IDEHeaderProps {
 
 export default function IDEHeader({ isRunning, onRun }: IDEHeaderProps) {
   return (
-    <header className="flex items-center justify-between px-4 h-14 bg-[#0A0A0A] border-b border-white/[0.08] z-10 select-none sticky top-0">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
-            <PythonLogo />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-medium text-sm text-[#EDEDED] leading-tight">PyCompile</span>
-          </div>
+    <header className="flex items-center justify-between px-6 md:px-8 h-16 bg-[#0A0A0A]/95 backdrop-blur-sm border-b border-white/[0.08] z-10 select-none sticky top-0">
+      
+      {/* Brand & Logo Section */}
+      <div className="flex items-center gap-4 group cursor-pointer">
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-white to-gray-200 flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-[0_0_15px_rgba(255,255,255,0.15)] group-hover:scale-105">
+          <PythonLogo />
+        </div>
+        <div className="flex flex-col">
+          <span className="font-semibold text-sm tracking-wide text-[#EDEDED] leading-tight">
+            PyCompile
+          </span>
+          <span className="text-[11px] text-[#A1A1AA] font-medium mt-0.5">
+            Python 3.10
+          </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      {/* Actions Section */}
+      <div className="flex items-center gap-4">
         <button
           onClick={onRun}
           disabled={isRunning}
-          className={`flex items-center left-20px gap-2 px-6 py-3 rounded-md font-medium text-sm transition-all duration-200 active:scale-[0.98] ${
+          className={`group relative flex items-center justify-center gap-2.5 min-w-[120px] px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-300 active:scale-95 overflow-hidden ${
             isRunning
-              ? "bg-[#1A1A1A] text-[#71717A] cursor-not-allowed border border-white/[0.08]"
-              : "bg-blue-600 text-white hover:bg-blue-700 border border-transparent shadow-sm"
+              ? "bg-[#1A1A1A] text-[#71717A] cursor-not-allowed border border-white/10"
+              : "bg-blue-600 text-white hover:bg-blue-500 border border-blue-500/50 shadow-[0_0_15px_rgba(37,99,235,0.25)] hover:shadow-[0_0_25px_rgba(37,99,235,0.45)]"
           }`}
         >
           {isRunning ? (
             <>
               <SpinnerIcon />
-              <span>Executing...</span>
+              <span>Executing</span>
             </>
           ) : (
             <>
@@ -56,9 +62,17 @@ function PythonLogo() {
 }
 
 function PlayIcon() {
-  return <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21" /></svg>;
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="transition-transform duration-200 group-hover:scale-110">
+      <polygon points="5,3 19,12 5,21" />
+    </svg>
+  );
 }
 
 function SpinnerIcon() {
-  return <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="animate-spin"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>;
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="animate-spin">
+      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+    </svg>
+  );
 }
