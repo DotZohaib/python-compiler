@@ -58,29 +58,25 @@ export default function ResizableDivider({
       role="separator"
       aria-label="Drag to resize terminal panel"
       onMouseDown={handleMouseDown}
-      className="group flex items-center justify-center cursor-row-resize select-none"
+      className={`group flex items-center justify-center cursor-row-resize select-none h-2 transition-colors duration-150 flex-shrink-0 z-10 ${
+        isDragging ? "bg-blue-500/20" : "bg-[#18181b] hover:bg-zinc-800"
+      }`}
       style={{
-        height: "8px",
-        backgroundColor: "var(--bg-panel)",
-        borderTop: "1px solid var(--border-primary)",
-        borderBottom: "1px solid var(--border-primary)",
-        transition: "background-color 0.15s ease",
-        flexShrink: 0,
+        borderTop: "1px solid rgba(255, 255, 255, 0.05)",
+        borderBottom: "1px solid rgba(0, 0, 0, 0.5)",
       }}
     >
-      {/* Drag handle visual */}
       <div
-        className="flex gap-1 opacity-40 group-hover:opacity-100 transition-opacity duration-150"
+        className={`flex gap-1 transition-opacity duration-150 ${
+          isDragging ? "opacity-100" : "opacity-30 group-hover:opacity-80"
+        }`}
       >
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            style={{
-              width: "32px",
-              height: "2px",
-              borderRadius: "2px",
-              backgroundColor: "var(--text-muted)",
-            }}
+            className={`w-8 h-0.5 rounded-full ${
+              isDragging ? "bg-blue-400" : "bg-zinc-500"
+            }`}
           />
         ))}
       </div>
